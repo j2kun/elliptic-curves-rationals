@@ -111,22 +111,24 @@ class Point(object):
    def __rmul__(self, n):
       return self * n
 
+   def __list__(self):
+      return [self.x, self.y]
+
    def __eq__(self, other):
       if isinstance(other, Ideal):
          return False
-      return self[0] == other[0] and self[1] == other[1]
+      return list(self) == list(other)
 
    def __ne__(self, other):
       return not self == other
 
    def __getitem__(self, index):
-      if index > 1 or index < -2: raise IndexError("Points have only two coordinates")
-      return self.x if index == 0 or index == -2 else self.y
+      return list(self)[index]
 
    # lexicographic ordering on points
    def __lt__(self, other):
       if isinstance(other, Ideal): return False
-      return self[0] < other[0] or (self[0] == other[0] and self[1] < other[1])
+      return list(self) < list(other)
    def __gt__(self, other):
       return other.__lt__(self)
    def __ge__(self, other):
@@ -160,6 +162,6 @@ class Ideal(Point):
       return isinstance(other, Ideal)
 
    def __lt__(self, other):
-      return True
+      return not isinstance(other, Ideal)
 
 
