@@ -1,4 +1,3 @@
-
 class EllipticCurve(object):
    def __init__(self, a, b):
       # assume we're already in the Weierstrass form
@@ -86,25 +85,23 @@ class Point(object):
    def __mul__(self, n):
       if not isinstance(n, int):
          raise Exception("Can't scale a point by something which isn't an int!")
-      else:
-         if n < 0:
-             return -self * -n
-         if n == 0:
-             return Ideal(self.curve)
-         else:
-             Q = self
-             R = self if n & 1 == 1 else Ideal(self.curve)
 
-             i = 2
-             while i <= n:
-                 Q = Q + Q
+      if n < 0:
+         return -self * -n
 
-                 if n & i == i:
-                     R = Q + R
+      if n == 0:
+         return Ideal(self.curve)
 
-                 i = i << 1
+      Q = self
+      R = self if n & 1 == 1 else Ideal(self.curve)
 
-             return R
+      i = 2
+      while i <= n:
+         Q += Q
+         if n & i == i:
+             R += Q
+         i = i << 1
+      return R
 
 
    def __rmul__(self, n):
